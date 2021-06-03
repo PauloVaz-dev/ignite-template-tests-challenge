@@ -1,8 +1,11 @@
 import 'reflect-metadata';
+import * as dotenv from 'dotenv';
 import 'express-async-errors';
 
 import express from 'express';
 import cors from 'cors';
+
+dotenv.config();
 
 import './database';
 import './shared/container';
