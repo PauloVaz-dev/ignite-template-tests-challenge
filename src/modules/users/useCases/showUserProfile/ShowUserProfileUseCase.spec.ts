@@ -5,15 +5,32 @@ import { ShowUserProfileUseCase } from "./ShowUserProfileUseCase";
 
 let inMemoryUsersRepository: InMemoryUsersRepository;
 let showUserProfileUseCase: ShowUserProfileUseCase;
-let createUserUserCase: CreateUserUseCase
+let createUseUserCase: CreateUserUseCase
 
-describe('Prifile User', () => {
+describe('Profile User', () => {
   beforeEach(() => {
     inMemoryUsersRepository = new InMemoryUsersRepository();
 
-    createUserUserCase = new CreateUserUseCase(inMemoryUsersRepository)
+    createUseUserCase = new CreateUserUseCase(inMemoryUsersRepository)
 
     showUserProfileUseCase = new ShowUserProfileUseCase(inMemoryUsersRepository);
+  });
+
+  it("should be able to show user by id", async () => {
+    const user = {
+      name: "user teste",
+      email: "userteste@mail.com",
+      password: "123"
+    }
+
+    const userCreated = await createUseUserCase.execute({
+      name: user.name,
+      email: user.email,
+      password: user.password
+    });
+    const userShow = await showUserProfileUseCase.execute(userCreated.id as string)
+
+    expect(userShow).toHaveProperty("id")
   });
 
   it('should be able authenticate an user', async () => {
@@ -23,7 +40,7 @@ describe('Prifile User', () => {
       name: 'Paul Vaz',
     };
 
-    const user = await createUserUserCase.execute(userDTO);
+    const user = await createUseUserCase.execute(userDTO);
 
     const result = await showUserProfileUseCase.execute(
       user.id as string
@@ -42,10 +59,10 @@ describe('Prifile User', () => {
         name: 'Paul Vaz',
       };
 
-      const user = await createUserUserCase.execute(userDTO);
+      const user = await createUseUserCase.execute(userDTO);
 
       const result = await showUserProfileUseCase.execute(
-        '222222222222222222222'
+        'vaz'
       );
     }).rejects.toBeInstanceOf(ShowUserProfileError)
 
